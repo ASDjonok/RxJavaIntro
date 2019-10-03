@@ -1,35 +1,40 @@
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
+import rx.Observable;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Scheduler computation = Schedulers.computation();
+
+        long startTimeMillis = System.currentTimeMillis();
+
+        /*Observable.range(1, 10)
+                .map(Main::myDouble)
+                .subscribe(Main::print);*/
 
         Observable.range(1, 10)
                 .flatMap(integer -> Observable.just(integer)
                         .map(Main::myDouble)
                         .subscribeOn(computation)
                 )
-//                .map(Main::myDouble)
-//                .subscribeOn(computation)
+                .toBlocking()
                 .subscribe(Main::print);
 
-        Thread.sleep(12000);
-//        Thread.currentThread().join();
+        System.out.println("Time: " + (System.currentTimeMillis() - startTimeMillis));
     }
 
-    private static void print(int i) throws InterruptedException {
-//        Thread.currentThread().join();
-        Thread.sleep(1000);
+    private static void print(int i) {
         System.out.println("Thread name = " + Thread.currentThread().getName());
         System.out.println(i);
     }
 
-    private static int myDouble(int i) throws InterruptedException {
-//        Thread.currentThread().join();
-        Thread.sleep(1000);
-        System.out.println("MyDouble: Thread name = " + Thread.currentThread().getName());
-        return i * 2;
+    private static int myDouble(int i) {
+        try {
+            System.out.println("MyDouble: Thread name = " + Thread.currentThread().getName());
+            Thread.sleep(1000);
+            return i * 2;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
