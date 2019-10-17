@@ -19,7 +19,7 @@ public class CBExample {
             arthur = JsonObject.create()
                     .put("name", "Arthur "+i)
                     .put("email", "kingarthur@couchbase.com")
-                    .put("interests", JsonArray.from("Holy Grail", "African Swallows"));
+                    .put("interests", JsonArray.from("Holy Grail", "African Swallows"+i));
 
             // Store the Document
             bucket.upsert(JsonDocument.create("u:king_arthur" + i, arthur));

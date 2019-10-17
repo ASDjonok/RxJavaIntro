@@ -1,6 +1,10 @@
-import rx.Observable;
+/*import rx.Observable;
 import rx.Scheduler;
-import rx.schedulers.Schedulers;
+import rx.schedulers.Schedulers;*/
+
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,8 +21,9 @@ public class Main {
                         .map(Main::myDouble)
                         .subscribeOn(computation)
                 )
-                .toBlocking()
-                .subscribe(Main::print);
+                /*.toBlocking()
+                .subscribe(Main::print);*/
+                .blockingForEach(Main::print);
 
         System.out.println("Time: " + (System.currentTimeMillis() - startTimeMillis));
     }
