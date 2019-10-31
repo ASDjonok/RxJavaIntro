@@ -6,7 +6,7 @@ public class FutureExample {
         System.out.println("Thread name = " + Thread.currentThread().getName());
 
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
-            System.out.println("Thread name = " + Thread.currentThread().getName());
+            System.out.println("Thread name2 = " + Thread.currentThread().getName());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -17,7 +17,7 @@ public class FutureExample {
 
         future.thenAccept(result -> System.out.println(result));
 
-//                future.get();
-        Thread.sleep(2000);
+                future.get();
+//        Thread.sleep(2000);
     }
 }

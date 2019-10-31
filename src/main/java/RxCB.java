@@ -26,19 +26,21 @@ public class RxCB {
 
         long startTimeMillis = System.currentTimeMillis();
 
-        /*Observable.range(1, 10)
-                .map(Main::myDouble)
-                .subscribe(Main::print);*/
-
-
-        Observable.range(1, 10)
+        Observable.range(1, 50)
                 .flatMap(integer -> Observable.just(integer)
                         .map(RxCB::dbGetAccess)
                         .subscribeOn(computation)
                 )
-                /*.toBlocking()
-                .subscribe(Main::print);*/
                 .blockingForEach(RxCB::print);
+
+        System.out.println("Time: " + (System.currentTimeMillis() - startTimeMillis));
+
+        // sequential part
+        startTimeMillis = System.currentTimeMillis();
+
+        for (int i = 1; i < 50; i++) {
+            System.out.println(dbGetAccess(i));
+        }
 
         System.out.println("Time: " + (System.currentTimeMillis() - startTimeMillis));
     }
@@ -52,8 +54,10 @@ public class RxCB {
         System.out.println("MyDouble: Thread name = " + Thread.currentThread().getName());
         // Perform a N1QL Query
         N1qlQueryResult result = bucket.query(
-                N1qlQuery.parameterized("SELECT name FROM `my-bucket` WHERE $1 IN interests",
-                        JsonArray.from("African Swallows"+i))
+                /*N1qlQuery.parameterized("SELECT name FROM `my-bucket` WHERE $1 IN interests",
+                        JsonArray.from("African Swallows"+i))*/
+                N1qlQuery.parameterized("SELECT name FROM `my-bucket` WHERE name=$1",
+                        JsonArray.from("Arthur "+i))
         );
 
         /*// Print each found Row
